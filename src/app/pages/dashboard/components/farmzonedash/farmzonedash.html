@@ -1,0 +1,113 @@
+<h1>Tank Status</h1>
+
+<div class="grid grid-cols-12 gap-6 p-4">
+    <!-- Use zones$ | async to display real-time data from the Observable -->
+    @for (zone of zones; track zone.zoneName) {
+
+    <div class="col-span-12">
+        <h2 class="text-xl font-bold mb-4">🐠 {{ zone.zoneName | uppercase }}</h2>
+        <p-divider type="dotted"></p-divider>
+
+        <div class="grid grid-cols-12 gap-6 w-full">
+            @for (tank of zone.tanks; track tank.id) {
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                <!-- CARD CONTAINER: Clickable to simulate navigation to tank details -->
+                <div class="app-dashboard-card border-t-4 border-blue-500 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <div (click)="goToTankDetails(zone.zoneName, tank.tankId)" class="cursor-pointer flex items-center text-gray-700 dark:text-gray-300 font-medium">
+                            <!-- Placeholder icon for database/tank -->
+                            <i class="pi pi-database mr-2"></i>
+                            <span class="text-blue-600 dark:text-blue-400 font-extrabold text-xl">{{ tank.tankId }}</span>
+                        </div>
+                        <span (click)="goToTankConfig(zone.zoneName, tank.tankId)" class="cursor-pointer text-blue-600 dark:text-blue-400 font-extrabold text-lg">
+                            {{ tank.currentStock?.toUpperCase() }}
+                            <i class="pi pi-sliders-h m-2 text-gray-500 dark:text-gray-400"></i>
+                        </span>
+                    </div>
+
+                    <!-- Sensor Grid -->
+                    <div class="mb-6 grid grid-cols-5 gap-2">
+                        @for (sensor of [ { label: 'PH', key: 'ph' }, { label: 'DO', key: 'do' }, { label: 'NH4', key: 'nh4' }, { label: 'SALT', key: 'salinity' }, { label: 'TEMP', key: 'temp_c' } ]; track sensor.label) {
+
+                        <div class="text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 transition duration-200 ease-in-out hover:shadow-xl overflow-hidden">
+                            <div class="app-sensor-header bg-gray-100 dark:bg-gray-700 py-1">
+                                <span class="text-xs uppercase font-semibold leading-none text-gray-600 dark:text-gray-300">{{ sensor.label }}</span>
+                            </div>
+
+                            <!-- Apply color coding based on sensor value via getSensorCardClasses() -->
+                            <div class="app-sensor-value text-white py-2" [ngClass]="getSensorCardClasses(tank[sensor.key], sensor.key)">
+                                <span class="text-base font-extrabold leading-none">{{ tank[sensor.key] }}</span>
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Water Level Bar (Custom Tailwind Progress Bar) -->
+                    <div class="mb-4">
+                        <div class="flex items-center mb-2 text-gray-700 dark:text-gray-300">
+                            <!-- Placeholder icon for water level -->
+                            <i class="pi pi-box mr-2"></i>
+                            <span class="font-semibold text-sm">Water Level</span>
+                        </div>
+
+                        @if (tank.waterlevel !== null && tank.waterlevel > 0) {
+                        <div class="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+                            <div class="h-3 rounded-full flex items-center justify-center text-xs font-medium text-white transition-all duration-500" [ngStyle]="{'width': tank.waterlevel + '%', 'background-color': '#4ade80'}">
+                                <span class="sr-only">{{ tank.waterlevel }}%</span>
+                            </div>
+                        </div>
+                        <p class="text-right text-xs mt-1 text-gray-500 dark:text-gray-400">{{ tank.waterlevel }}%</p>
+                        } @else {
+                        <div class="text-center text-sm text-gray-500 dark:text-gray-400 my-2">Water level data unavailable.</div>
+                        <div class="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+                            <div class="h-3 rounded-full bg-gray-400" [style.width.%]="0"></div>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Growout Section -->
+                    <div class="mb-4">
+                        @if (getGrowout(tank.stockDate['seconds'], tank.releaseDate['seconds']); as metrics) {
+                        <div class="app-growout-progress px-4 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-semibold uppercase text-gray-600 dark:text-gray-400"> Growout</span>
+                                <span class="text-base font-extrabold text-blue-600 dark:text-blue-400"> {{ metrics.completionPercentage }}% </span>
+                            </div>
+
+                            <!-- Growout Progress Bar -->
+                            <div class="w-full h-2 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-500 transition-all duration-500" [style.width.%]="metrics.completionPercentage"></div>
+                            </div>
+
+                            <div class="flex justify-between items-center mt-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <span> Aged: <span class="font-bold text-gray-700 dark:text-gray-300"> {{ metrics.daysSinceStock }} </span> days </span>
+                                <span> Total: <span class="font-bold text-gray-700 dark:text-gray-300"> {{ metrics.totalGrowoutDays }} </span> days </span>
+                                <span> Left: <span class="font-bold text-gray-700 dark:text-gray-300"> {{ metrics.daysUntilRelease }} </span> days </span>
+                            </div>
+                        </div>
+                        } @else {
+                        <span class="text-sm text-gray-500"> Growout calculation error. </span>
+                        }
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t flex justify-between items-center text-sm">
+                        <span class="text-primary font-medium text-blue-500">Last updated:</span>
+                        <span class="text-gray-500 dark:text-gray-400 font-semibold"> {{ tank.timestamp ? (tank.timestamp | date: 'shortTime') : 'Now' }} </span>
+                    </div>
+                    <div class="mt-2">
+                        <p-button (click)="setControlTarget(zone.zoneName, tank.tankId)" icon="pi pi-caret-right" classs="" label="Take Control" [rounded]="true" severity="success" />
+                    </div>
+                </div>
+                <p-divider type="dotted"></p-divider>
+            </div>
+
+            } @empty {
+            <p class="col-span-12 text-center text-gray-500">No tanks found in this zone.</p>
+            }
+        </div>
+    </div>
+    } @empty {
+    <p class="col-span-12 text-center text-gray-500">No zones data available.</p>
+    }
+</div>

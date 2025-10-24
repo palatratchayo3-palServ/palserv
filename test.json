@@ -1,0 +1,394 @@
+{
+  "zone_A": [
+    {
+      "id": "A1",
+      "waterlevel": 91,
+      "turbidity": 6.24,
+      "temp_c": 25.25,
+      "ph": 7.29,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772323200,
+        "nanoseconds": 0
+      },
+      "salinity": 5.36,
+      "currentStock": "tilapia",
+      "nh4": 0.15,
+      "timestamp": "2025-10-16T10:55:40.203689",
+      "date_epoch": 1760586940.2036874,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1756684800,
+        "nanoseconds": 0
+      },
+      "do": 7,
+      "tankId": "A1"
+    },
+    {
+      "id": "A2",
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1773532800,
+        "nanoseconds": 0
+      },
+      "waterlevel": 86,
+      "do": 6.25,
+      "ph": 7.68,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1757894400,
+        "nanoseconds": 0
+      },
+      "temp_c": 24.2,
+      "nh4": 0.17,
+      "turbidity": 6.89,
+      "timestamp": "2025-10-16T10:55:40.434715",
+      "tankId": "A2",
+      "date_epoch": 1760586940.4347143,
+      "currentStock": "tilapia",
+      "salinity": 5.27
+    },
+    {
+      "id": "A3",
+      "timestamp": "2025-10-16T10:55:40.520515",
+      "tankId": "A3",
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1766188800,
+        "nanoseconds": 0
+      },
+      "date_epoch": 1760586940.5205142,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1755648000,
+        "nanoseconds": 0
+      },
+      "currentStock": "vanamei",
+      "waterlevel": 91,
+      "turbidity": 5.61,
+      "do": 6.35,
+      "nh4": 0.22,
+      "temp_c": 24.99,
+      "salinity": 4.5,
+      "ph": 7.52
+    },
+    {
+      "id": "A4",
+      "date_epoch": 1760586940.6138477,
+      "do": 6.4,
+      "waterlevel": 89,
+      "tankId": "A4",
+      "temp_c": 25.25,
+      "timestamp": "2025-10-16T10:55:40.613849",
+      "turbidity": 5.9,
+      "currentStock": "vanamei",
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1757030400,
+        "nanoseconds": 0
+      },
+      "ph": 7.62,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1767571200,
+        "nanoseconds": 0
+      },
+      "salinity": 5.11,
+      "nh4": 0.21
+    }
+  ],
+  "zone_B": [
+    {
+      "id": "B1",
+      "salinity": 5.3,
+      "ph": 7.53,
+      "timestamp": "2025-10-16T10:55:40.701874",
+      "waterlevel": 95,
+      "tankId": "B1",
+      "date_epoch": 1760586940.7018733,
+      "turbidity": 5.82,
+      "currentStock": "baramundi",
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1780272000,
+        "nanoseconds": 0
+      },
+      "temp_c": 24.32,
+      "nh4": 0.1,
+      "do": 6.33,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1751328000,
+        "nanoseconds": 0
+      }
+    },
+    {
+      "id": "B2",
+      "date_epoch": 1760586940.7865844,
+      "ph": 7.35,
+      "do": 5.56,
+      "waterlevel": 93,
+      "nh4": 0.13,
+      "currentStock": "baramundi",
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1754784000,
+        "nanoseconds": 0
+      },
+      "timestamp": "2025-10-16T10:55:40.786585",
+      "turbidity": 6.21,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1783641600,
+        "nanoseconds": 0
+      },
+      "temp_c": 24.4,
+      "salinity": 5.31,
+      "tankId": "B2"
+    },
+    {
+      "id": "B3",
+      "do": 5.67,
+      "waterlevel": 91,
+      "temp_c": 25.65,
+      "date_epoch": 1760586940.8645482,
+      "tankId": "B3",
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1759276800,
+        "nanoseconds": 0
+      },
+      "ph": 7.29,
+      "currentStock": "tilapia",
+      "salinity": 5.48,
+      "timestamp": "2025-10-16T10:55:40.864549",
+      "turbidity": 4.85,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1775001600,
+        "nanoseconds": 0
+      },
+      "nh4": 0.11
+    },
+    {
+      "id": "B4",
+      "do": 5.72,
+      "date_epoch": 1760586940.9432688,
+      "salinity": 5.48,
+      "currentStock": "vanamei",
+      "waterlevel": 94,
+      "ph": 7.54,
+      "nh4": 0.19,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1769299200,
+        "nanoseconds": 0
+      },
+      "turbidity": 6.08,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1758758400,
+        "nanoseconds": 0
+      },
+      "timestamp": "2025-10-16T10:55:40.943270",
+      "temp_c": 25.04,
+      "tankId": "B4"
+    }
+  ],
+  "zone_C": [
+    {
+      "id": "C1",
+      "ph": 7.35,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1760054400,
+        "nanoseconds": 0
+      },
+      "temp_c": 24.03,
+      "date_epoch": 1760586941.0380187,
+      "nh4": 0.19,
+      "waterlevel": 93,
+      "do": 6.47,
+      "currentStock": "vanamei",
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1770681600,
+        "nanoseconds": 0
+      },
+      "timestamp": "2025-10-16T10:55:41.038020",
+      "tankId": "C1",
+      "turbidity": 5.09,
+      "salinity": 5.26
+    },
+    {
+      "id": "C2",
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1752969600,
+        "nanoseconds": 0
+      },
+      "ph": 7.44,
+      "date_epoch": 1760586941.130002,
+      "nh4": 0.2,
+      "waterlevel": 92,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1768867200,
+        "nanoseconds": 0
+      },
+      "currentStock": "tilapia",
+      "salinity": 5.4,
+      "timestamp": "2025-10-16T10:55:41.130003",
+      "temp_c": 24.53,
+      "do": 6.43,
+      "tankId": "C2",
+      "turbidity": 6.94
+    },
+    {
+      "id": "C3",
+      "turbidity": 6.21,
+      "timestamp": "2025-10-16T10:55:41.238030",
+      "nh4": 0.14,
+      "tankId": "C3",
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1756684800,
+        "nanoseconds": 0
+      },
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1785542400,
+        "nanoseconds": 0
+      },
+      "currentStock": "baramundi",
+      "do": 6.14,
+      "waterlevel": 92,
+      "temp_c": 24.81,
+      "date_epoch": 1760586941.238029,
+      "ph": 7.48,
+      "salinity": 4.62
+    },
+    {
+      "id": "C4",
+      "waterlevel": 87,
+      "temp_c": 25.2,
+      "timestamp": "2025-10-16T10:55:41.318278",
+      "currentStock": "vanamei",
+      "nh4": 0.21,
+      "do": 5.58,
+      "tankId": "C4",
+      "salinity": 4.6,
+      "date_epoch": 1760586941.318277,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1764547200,
+        "nanoseconds": 0
+      },
+      "ph": 7.79,
+      "turbidity": 5.85,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1754006400,
+        "nanoseconds": 0
+      }
+    }
+  ],
+  "zone_D": [
+    {
+      "id": "D1",
+      "currentStock": "tilapia",
+      "temp_c": 24.08,
+      "do": 6.09,
+      "timestamp": "2025-10-16T10:55:41.418068",
+      "salinity": 5.43,
+      "waterlevel": 86,
+      "date_epoch": 1760586941.418067,
+      "nh4": 0.15,
+      "turbidity": 4.49,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1760486400,
+        "nanoseconds": 0
+      },
+      "ph": 7.36,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1776211200,
+        "nanoseconds": 0
+      },
+      "tankId": "D1"
+    },
+    {
+      "id": "D2",
+      "temp_c": 25.73,
+      "nh4": 0.22,
+      "timestamp": "2025-10-16T10:55:41.494460",
+      "waterlevel": 86,
+      "salinity": 5.14,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1759622400,
+        "nanoseconds": 0
+      },
+      "date_epoch": 1760586941.4944592,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1788566400,
+        "nanoseconds": 0
+      },
+      "tankId": "D2",
+      "do": 6.22,
+      "ph": 7.25,
+      "turbidity": 6.21,
+      "currentStock": "baramundi"
+    },
+    {
+      "id": "D3",
+      "nh4": 0.06,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1756684800,
+        "nanoseconds": 0
+      },
+      "tankId": "D3",
+      "timestamp": "2025-10-16T10:55:41.582335",
+      "currentStock": "vanamei",
+      "waterlevel": 88,
+      "temp_c": 24.24,
+      "do": 5.58,
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1767225600,
+        "nanoseconds": 0
+      },
+      "ph": 7.56,
+      "date_epoch": 1760586941.5823317,
+      "salinity": 4.85,
+      "turbidity": 5.25
+    },
+    {
+      "id": "D4",
+      "ph": 7.55,
+      "salinity": 5.39,
+      "stockDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1760918400,
+        "nanoseconds": 0
+      },
+      "nh4": 0.17,
+      "temp_c": 25.57,
+      "currentStock": "tilapia",
+      "releaseDate": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1776643200,
+        "nanoseconds": 0
+      },
+      "do": 5.86,
+      "timestamp": "2025-10-16T10:55:41.661214",
+      "turbidity": 5.8,
+      "waterlevel": 95,
+      "date_epoch": 1760586941.6612136,
+      "tankId": "D4"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+@if (preConfigData.id) {
+<p-card [style]="{ width: '45rem', overflow: 'hidden' }">
+    @if (preConfigData.id) {
+    <div>
+        <div>
+            <div>
+                <form [formGroup]="tankConfigForm" (ngSubmit)="onSubmit()">
+                    <!-- 🌍 General Info -->
+                    <section>
+                        <h3>General Info</h3>
+
+                        <div>
+                            <div>
+                                <label for="zone">Zone</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-map-marker"></i></p-inputGroupAddon>
+                                    <input id="zone" pInputText formControlName="zone" />
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label for="tanktype">Tank Type</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-filter"></i></p-inputGroupAddon>
+                                    <p-select id="tanktype" formControlName="tanktype" [options]="tankTypeOptions" optionLabel="label" optionValue="value"> </p-select>
+                                </p-inputGroup>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 🧾 Last Configuration -->
+                    <section>
+                        <h3>Last Configuration</h3>
+                        <div formGroupName="lastconfig">
+                            <div>
+                                <label>Configured By</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-user"></i></p-inputGroupAddon>
+                                    <input pInputText formControlName="configby" />
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label>Date</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-calendar"></i></p-inputGroupAddon>
+                                    <p-datepicker formControlName="date" dateFormat="dd/mm/yy"></p-datepicker>
+                                </p-inputGroup>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 🐟 Stock Info -->
+                    <section>
+                        <h3>Stock Information</h3>
+                        <div formGroupName="stock">
+                            <div>
+                                <label>Hatchery Name</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-home"></i></p-inputGroupAddon>
+                                    <input pInputText formControlName="hatcheryName" />
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label>Product</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-box"></i></p-inputGroupAddon>
+                                    <input pInputText formControlName="product" />
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label for="qty">Quantity</label>
+                                <p-inputGroup>
+                                    <p-inputNumber formControlName="qty" inputId="qty"></p-inputNumber>
+                                    <p-inputGroupAddon>pcs</p-inputGroupAddon>
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label>Stock Date</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon><i class="pi pi-calendar"></i></p-inputGroupAddon>
+                                    <p-datepicker formControlName="stockDate" dateFormat="dd/mm/yy"></p-datepicker>
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label>Stocking Period</label>
+                                <p-inputGroup>
+                                    <p-inputNumber formControlName="stockingPeriod"></p-inputNumber>
+                                    <p-inputGroupAddon>days</p-inputGroupAddon>
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label>Target Weight</label>
+                                <p-inputGroup>
+                                    <p-inputNumber formControlName="targetweight"></p-inputNumber>
+                                    <p-inputGroupAddon>g</p-inputGroupAddon>
+                                </p-inputGroup>
+                            </div>
+
+                            <div>
+                                <label>Initial Weight</label>
+                                <p-inputGroup>
+                                    <p-inputNumber formControlName="weightGram"></p-inputNumber>
+                                    <p-inputGroupAddon>g</p-inputGroupAddon>
+                                </p-inputGroup>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 🌊 Tank Parameters -->
+                    <section>
+                        <h3>Tank Parameters</h3>
+                        <div formGroupName="tankParam">
+                            <div *ngFor="let param of ['ph', 'dox', 'nh4', 'turbidity', 'salinity', 'waterlevel', 'temp_c']" [formGroupName]="param">
+                                <label>{{ param.toUpperCase() }}</label>
+                                <p-inputGroup>
+                                    <p-inputGroupAddon>Min</p-inputGroupAddon>
+                                    <p-inputNumber formControlName="min"></p-inputNumber>
+                                    <p-inputGroupAddon>Max</p-inputGroupAddon>
+                                    <p-inputNumber formControlName="max"></p-inputNumber>
+                                </p-inputGroup>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 💾 Submit -->
+                    <div>
+                        <button pButton type="submit" label="Save Configuration" icon="pi pi-save" [disabled]="tankConfigForm.invalid"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    } @else {
+    <p>Loading...</p>
+    }
+</p-card>
+}

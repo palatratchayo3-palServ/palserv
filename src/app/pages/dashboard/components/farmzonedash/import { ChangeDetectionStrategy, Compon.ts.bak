@@ -1,0 +1,264 @@
+import { ChangeDetectionStrategy, Component, OnInit, inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CardModule } from 'primeng/card';
+import { DataCacheService } from '@/palservices/realtimeservice/realtime_subscriber.service';
+// import { ProgressBar } from 'primeng/progressbar';
+// Only keeping necessary PrimeNG modules
+import { ProgressBarModule } from 'primeng/progressbar';
+
+// Only keeping necessary service
+// import { FirestoreDataService } from '../../../service/firestore_services';
+
+@Component({
+    selector: 'app-farmzonedash',
+    standalone: true,
+    // Cleaned up imports list
+    imports: [CommonModule, ProgressBarModule, CardModule],
+    templateUrl: './farmzonedash.html',
+    styleUrls: ['./farmzonedash.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Farmzonedash implements OnInit, OnDestroy {
+    private dataCacheService = inject(DataCacheService);
+    private storageEventListener: (event: StorageEvent) => void = this.handleStorageChange.bind(this);
+
+    zoneData: any;
+    public ZONES = ['zone_A', 'zone_B', 'zone_C', 'zone_D'];
+    public dashboardData: any;
+
+    constructor(private cdRef: ChangeDetectorRef) {}
+
+    public ngOnInit(): void {
+        // FIX 1: Simply call the data service ONCE. The loop was unnecessary.
+        this.zoneData = this.dataCacheService.getCachedData();
+        window.addEventListener('storage', this.storageEventListener);
+
+        // Ensure data is loaded and is an object before proceeding
+        if (this.zoneData && typeof this.zoneData === 'object') {
+            // console.log('Data loaded successfully:', Object.keys(this.zoneData).length, 'zones.');
+        } else {
+            console.error('DataCacheService returned null or invalid data.');
+            this.zoneData = {}; // Safely reset to empty object
+        }
+    }
+
+    get zones() {
+        if (!this.zoneData || Object.keys(this.zoneData).length === 0) {
+            return []; // Return empty array if no data to prevent errors
+        }
+
+        // FIX 2: Added a check for tanks array to ensure stability
+        return Object.keys(this.zoneData).map((key) => ({
+            zoneName: key,
+            // Ensure tanks is an array, defaulting to empty array if not found
+            tanks: Array.isArray(this.zoneData[key as keyof typeof this.zoneData]) ? this.zoneData[key as keyof typeof this.zoneData] : []
+        }));
+    }
+
+    /**
+     * Determines the Tailwind CSS background class based on the sensor type and value.
+     * The 'type' parameter is set to 'string' to resolve the template type-checking error.
+     */
+    public getSensorCardClasses(value: number, type: string): string {
+        let className = 'bg-gray-500';
+
+        switch (type) {
+            case 'ph':
+                // Optimal: 6.5 - 7.5 (Green)
+                if (value < 6.0 || value > 8.0) {
+                    className = 'bg-red-500'; // Critical: < 6.0 OR > 8.0 (Red)
+                } else if (value < 6.5 || value > 7.5) {
+                    className = 'bg-yellow-500'; // Warning: 6.0 - 6.4 OR 7.6 - 8.0 (Yellow)
+                } else {
+                    className = 'bg-green-500';
+                }
+                break;
+
+            case 'do':
+                // Optimal: >= 5.0 (Green)
+                if (value < 4) {
+                    className = 'bg-red-500'; // Critical: < 4.0 (Red)
+                } else if (value < 5) {
+                    className = 'bg-yellow-500'; // Warning: 4.0 - 4.9 (Yellow)
+                } else {
+                    className = 'bg-green-500';
+                }
+                break;
+
+            case 'nh4':
+                // Optimal: < 0.2 (Green)
+                if (value >= 0.4) {
+                    className = 'bg-red-500'; // Critical: >= 0.4 (Red)
+                } else if (value >= 0.2) {
+                    className = 'bg-yellow-500'; // Warning: 0.2 - 0.39 (Yellow)
+                } else {
+                    className = 'bg-green-500';
+                }
+                break;
+
+            case 'salinity':
+                // Optimal Salt/Brackish: 25 - 35 (Green)
+                if (value < 5) {
+                    className = 'bg-blue-500'; // Freshwater: < 5 (Blue)
+                } else if (value > 35) {
+                    className = 'bg-red-500'; // Critical High Salt: > 35 (Red)
+                } else if (value >= 25) {
+                    className = 'bg-green-500';
+                } else {
+                    // 5 <= value < 25
+                    className = 'bg-yellow-500'; // Warning Brackish: 5 - 24 (Yellow)
+                }
+                break;
+
+            case 'temp':
+                // Optimal: 26.0 - 28.9 (Green)
+                if (value < 24.0 || value >= 31.0) {
+                    className = 'bg-red-500'; // Critical: < 24.0 OR >= 31.0 (Red)
+                } else if (value < 26.0 || value >= 29.0) {
+                    className = 'bg-yellow-500'; // Warning: 24.0 - 25.9 OR 29.0 - 30.9 (Yellow)
+                } else {
+                    className = 'bg-green-500';
+                }
+                break;
+
+            default:
+                className = 'bg-gray-500';
+                break;
+        }
+
+        return className;
+    }
+
+    //
+    // Define MS_IN_DAY as a constant (e.g., as a static property or external constant)
+    MS_IN_DAY = 1000 * 60 * 60 * 24;
+
+    // Assuming MS_IN_DAY is a class property, e.g., MS_IN_DAY = 86400000;
+    // Example: private MS_IN_DAY = 1000 * 60 * 60 * 24;
+
+    public getGrowout(
+        stockEpochSeconds: number, // Expecting seconds (e.g., 1756684800)
+        releaseEpochSeconds: number // Expecting seconds (e.g., 1772323200)
+    ): {
+        totalDurationMs: number;
+        totalGrowoutDays: number;
+        daysSinceStock: number;
+        daysUntilRelease: number;
+        completionPercentage: number;
+    } {
+        const MS_IN_SECOND = 1000;
+
+        // 💡 REVISION: Convert seconds-based input to milliseconds-based epoch
+        const stockEpochMs = stockEpochSeconds * MS_IN_SECOND;
+        const releaseEpochMs = releaseEpochSeconds * MS_IN_SECOND;
+
+        // Original logic starts here, using the converted '...EpochMs' variables
+        const nowEpochMs = new Date().getTime();
+
+        // Assuming 'this.MS_IN_DAY' is defined (e.g., 86400000)
+        const msInDay = this.MS_IN_DAY;
+
+        // Calculate midnight epochs to ensure calculations are based on full days
+        const todayMidnightEpochMs = Math.floor(nowEpochMs / msInDay) * msInDay;
+        const stockMidnightEpochMs = Math.floor(stockEpochMs / msInDay) * msInDay;
+        const releaseMidnightEpochMs = Math.floor(releaseEpochMs / msInDay) * msInDay;
+
+        const totalDurationMs = releaseEpochMs - stockEpochMs;
+        const totalGrowoutDays = Math.floor(totalDurationMs / msInDay);
+
+        if (totalGrowoutDays <= 0) {
+            return {
+                totalDurationMs: 0,
+                totalGrowoutDays: 0,
+                daysSinceStock: 0,
+                daysUntilRelease: 0,
+                completionPercentage: 0
+            };
+        }
+
+        const ageDiffMs = todayMidnightEpochMs - stockMidnightEpochMs;
+        const daysSinceStock = Math.max(0, Math.floor(ageDiffMs / msInDay));
+
+        const remainingDiffMs = releaseMidnightEpochMs - todayMidnightEpochMs;
+        const daysUntilRelease = Math.max(0, Math.floor(remainingDiffMs / msInDay));
+
+        const completionPercentage = (daysSinceStock / totalGrowoutDays) * 100;
+
+        let growoutData = {
+            totalDurationMs: totalDurationMs,
+            totalGrowoutDays: totalGrowoutDays,
+            daysSinceStock: daysSinceStock,
+            daysUntilRelease: daysUntilRelease,
+            completionPercentage: Math.min(100, parseFloat(completionPercentage.toFixed(1)))
+        };
+        return growoutData;
+    }
+
+    /**
+     * Safely extracts the Unix epoch time (ms) from a Firestore Timestamp object or Date object.
+     */
+    public safeGetEpochMs(dateObject: any) {
+        if (dateObject) {
+            // 1. Check for Firestore SDK Timestamp object (preferred method)
+            if (typeof dateObject.toDate === 'function') {
+                const date = dateObject.toDate();
+                if (!isNaN(date.getTime())) {
+                    return date.getTime();
+                }
+            }
+            // 2. Check for JSON/raw object representation with 'seconds' property
+            else if (typeof dateObject === 'object' && dateObject !== null && typeof dateObject.seconds === 'number') {
+                // Convert seconds (10 digits) to milliseconds (13 digits)
+                return dateObject.seconds * 1000;
+            }
+            // 3. Check if it's already a native Date object
+            else if (dateObject instanceof Date && !isNaN(dateObject.getTime())) {
+                return dateObject.getTime();
+            }
+        }
+        return null;
+    }
+
+    public goToTankDetails(zoneName: string, tankId: string): void {
+        const url = `/${zoneName.toLowerCase()}/${tankId.toLowerCase()}`;
+        console.log(`Navigating to: ${url}`);
+        // This simulates Angular routing in a single-file environment
+        window.location.hash = url;
+    }
+
+    ngOnDestroy(): void {
+        // ⚠️ CRITICAL: Remove the listener when the component is destroyed
+        window.removeEventListener('storage', this.storageEventListener);
+    }
+
+    // --- Event Handler with Optimized Comparison ---
+    private handleStorageChange(event: StorageEvent): void {
+        if (event.key === 'app_data_cache') {
+            const newCacheDataString = localStorage.getItem('app_data_cache');
+
+            // 💡 FIX: Compare the new raw string against the stored raw string (currentCacheDataString)
+            if (newCacheDataString !== this.zoneData) {
+                // 1. Update the stored string for the next comparison
+                this.zoneData = newCacheDataString;
+
+                // 2. Re-load the parsed data into the bound property
+                if (newCacheDataString) {
+                    try {
+                        // Assuming this is how your service/logic reads and parses the LATEST data
+                        this.zoneData = this.dataCacheService.getCachedData();
+                    } catch (e) {
+                        console.error('Failed to parse updated cache data', e);
+                        this.zoneData = {};
+                    }
+                } else {
+                    this.zoneData = {};
+                }
+
+                // 3. Force re-render (since data has definitively changed)
+                this.cdRef.detectChanges();
+
+                console.log('Dashboard re-rendered due to local storage update.');
+            }
+        }
+    }
+}

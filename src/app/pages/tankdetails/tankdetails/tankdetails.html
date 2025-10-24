@@ -1,0 +1,84 @@
+<div class="card col-span-12 xl:col-span-6">
+    <div class="p-8 bg-white shadow-2xl rounded-xl mt-10">
+        <h1 class="text-3xl font-extrabold text-indigo-700 mb-6 border-b pb-2">Tank Data Viewer</h1>
+
+        <!-- Section 1: Data Selection Details -->
+        <div class="space-y-4 mb-8">
+            <div class="flex justify-between p-3 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
+                <p class="font-medium text-indigo-600">Selected Zone (DB Key):</p>
+                <p class="text-xl font-bold font-mono text-indigo-800">{{ zoneId }}</p>
+            </div>
+            <div class="flex justify-between p-3 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
+                <p class="font-medium text-indigo-600">Selected Tank (DB Key):</p>
+                <p class="text-xl font-bold font-mono text-indigo-800">{{ tankId }}</p>
+            </div>
+            <!-- Display the found array index -->
+            <div class="flex justify-between p-3 bg-gray-100 rounded-lg border-l-4 border-gray-400">
+                <p class="font-medium text-gray-700">Tank Found Status:</p>
+                <p class="text-xl font-bold font-mono text-gray-800">@if (selectedTank) { Found } @else { Not Found }</p>
+            </div>
+        </div>
+
+        <!-- Section 2: Displaying the Selected Tank Data -->
+        @if (selectedTank) {
+        <div class="border-t pt-6">
+            <h2 class="text-2xl font-bold text-green-700 mb-4">{{ selectedTank.tankId }} Details</h2>
+            <p class="text-sm text-gray-500 mb-4">Latest reading from tank **{{ selectedTank.tankId }}**</p>
+
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <!-- Metric 1: Temperature -->
+                <div class="bg-blue-50 p-4 rounded-xl shadow-inner">
+                    <p class="text-xs font-medium text-blue-600">Temp (°C)</p>
+                    <p class="text-2xl font-extrabold text-blue-800">{{ selectedTank.temp_c | number:'1.1-1' }}</p>
+                </div>
+
+                <!-- Metric 2: pH -->
+                <div class="bg-yellow-50 p-4 rounded-xl shadow-inner">
+                    <p class="text-xs font-medium text-yellow-600">pH</p>
+                    <p class="text-2xl font-extrabold text-yellow-800">{{ selectedTank.ph | number:'1.1-1' }}</p>
+                </div>
+
+                <!-- Metric 3: Dissolved Oxygen -->
+                <div class="bg-green-50 p-4 rounded-xl shadow-inner">
+                    <p class="text-xs font-medium text-green-600">DO</p>
+                    <p class="text-2xl font-extrabold text-green-800">{{ selectedTank.do | number:'1.1-1' }}</p>
+                </div>
+
+                <!-- Metric 4: Salinity -->
+                <div class="col-span-1 bg-gray-50 p-4 rounded-xl shadow-inner">
+                    <p class="text-xs font-medium text-gray-600">Salinity</p>
+                    <p class="text-2xl font-extrabold text-gray-800">{{ selectedTank.salinity | number:'1.1-1' }}</p>
+                </div>
+
+                <!-- Metric 5: Water Level -->
+                <div class="col-span-1 bg-gray-50 p-4 rounded-xl shadow-inner">
+                    <p class="text-xs font-medium text-gray-600">Level (%)</p>
+                    <p class="text-2xl font-extrabold text-gray-800">{{ selectedTank.waterlevel }}</p>
+                </div>
+
+                <!-- Metric 6: Ammonia (NH4) - Highlighted if high -->
+                <div [ngClass]="{'bg-red-100 border-red-500': selectedTank.nh4 > 0.5, 'bg-gray-50 border-gray-300': selectedTank.nh4 <= 0.5}" class="col-span-1 p-4 rounded-xl shadow-inner border">
+                    <p class="text-xs font-medium text-gray-600">NH<sub>4</sub></p>
+                    <!-- 🎯 FIX: Changed NH$_{4}$ to NH<sub>4</sub> -->
+                    <p class="text-2xl font-extrabold text-gray-800">{{ selectedTank.nh4 | number:'1.2-2' }}</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-center text-gray-400 mt-6">Data timestamp: **{{ selectedTank.timestamp | date:'short' }}** (ID: {{ selectedTank.id }})</p>
+        </div>
+        } @else {
+        <div class="text-center p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <p class="font-bold">Error: Tank '{{ tankId }}' not found in data for zone '{{ zoneId }}'.</p>
+            <p class="text-sm mt-2">Check the URL parameters and ensure the data cache is populated.</p>
+        </div>
+        }
+
+        <p class="mt-8 text-sm text-gray-500 text-center border-t pt-4">
+            The full selected object (for debugging):
+            <code class="block bg-gray-100 p-2 rounded mt-2 text-left text-sm whitespace-pre-wrap">{{ selectedTank | json }}</code>
+        </p>
+        <div>
+            <app-tankhistory></app-tankhistory>
+        </div>
+    </div>
+</div>

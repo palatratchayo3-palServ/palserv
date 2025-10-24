@@ -1,0 +1,211 @@
+<h1 class="text-3xl font-bold mb-4">⚡ Solar System Dashboard</h1>
+
+<div class="grid grid-cols-12 gap-6 p-4">
+    <div class="col-span-12">
+        <h2 class="text-xl font-bold mb-4">📈 System Health Overview</h2>
+        <p-divider type="dotted"></p-divider>
+
+        <div class="grid grid-cols-12 gap-6 w-full">
+            <div class="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                <div class="app-dashboard-card border-t-4 border-blue-500 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <div class="flex items-center text-gray-700 dark:text-gray-300 font-medium">
+                            <i class="pi pi-sun mr-2 text-yellow-500 text-xl"></i>
+                            <span class="text-blue-600 dark:text-blue-400 font-extrabold text-xl">AC POWER</span>
+                        </div>
+                        <i class="pi pi-chart-line text-2xl text-gray-500 dark:text-gray-400"></i>
+                    </div>
+
+                    <div class="mb-4 text-center">
+                        <span class="text-6xl font-bold text-blue-600 dark:text-blue-400">{{ totalACPower }}</span>
+                        <span class="text-2xl text-gray-500">kW</span>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t flex justify-between items-center text-sm">
+                        <span class="text-primary font-medium text-blue-500">DC Input:</span>
+                        <span class="text-gray-500 dark:text-gray-400 font-semibold">{{ totalDCPower }} kW</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                <div
+                    class="app-dashboard-card border-t-4"
+                    [ngClass]="breakerStatus ? 'border-green-500' : 'border-red-500'"
+                    class="app-dashboard-card p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                >
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <div class="flex items-center text-gray-700 dark:text-gray-300 font-medium">
+                            <i class="pi pi-bolt mr-2 text-gray-500 text-xl"></i>
+                            <span class="text-blue-600 dark:text-blue-400 font-extrabold text-xl">BREAKER</span>
+                        </div>
+                        <p-toggleSwitch [ngModel]="breakerStatus" [disabled]="true" />
+                    </div>
+
+                    <div class="mb-4 text-center">
+                        <span class="text-4xl font-extrabold" [ngClass]="breakerStatus ? 'text-green-600' : 'text-red-600'">{{ breakerStatus ? 'ONLINE' : 'OFFLINE' }}</span>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t flex justify-between items-center text-sm">
+                        <span class="text-primary font-medium text-blue-500">Safety Switch</span>
+                        <p-button label="Trip" icon="pi pi-exclamation-triangle" severity="danger" [outlined]="true" [disabled]="!breakerStatus" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                <div
+                    class="app-dashboard-card border-t-4"
+                    [ngClass]="isTempAlert() ? 'border-red-500' : 'border-green-500'"
+                    class="app-dashboard-card p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                >
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <div class="flex items-center text-gray-700 dark:text-gray-300 font-medium">
+                            <i class="pi pi-thermometer mr-2 text-gray-500 text-xl"></i>
+                            <span class="text-blue-600 dark:text-blue-400 font-extrabold text-xl">INVERTER TEMP</span>
+                        </div>
+                        <p-meterGroup [value]="[{value: inverterTemp, color: isTempAlert() ? '#ef4444' : '#10b981'}]" [max]="70" [orientation]="'vertical'" class="h-10" />
+                    </div>
+
+                    <div class="mb-4 text-center">
+                        <span class="text-6xl font-bold" [ngClass]="isTempAlert() ? 'text-red-500' : 'text-green-500'">{{ inverterTemp | number:'1.1-1' }}</span>
+                        <span class="text-2xl text-gray-500">°C</span>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t flex justify-between items-center text-sm">
+                        <span class="text-primary font-medium text-blue-500">Threshold: 55°C</span>
+                        <span class="text-gray-500 dark:text-gray-400 font-semibold">{{ inverterLoad }}% Load</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                <div class="app-dashboard-card border-t-4 border-yellow-500 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <div class="flex items-center text-gray-700 dark:text-gray-300 font-medium">
+                            <i class="pi pi-globe mr-2 text-gray-500 text-xl"></i>
+                            <span class="text-blue-600 dark:text-blue-400 font-extrabold text-xl">IRRADIANCE</span>
+                        </div>
+                        <i class="pi pi-chart-bar text-2xl text-gray-500 dark:text-gray-400"></i>
+                    </div>
+
+                    <div class="mb-4 text-center">
+                        <span class="text-6xl font-bold text-yellow-600 dark:text-yellow-400">{{ luxValue }}</span>
+                        <span class="text-2xl text-gray-500">W/m²</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+                            <div class="h-3 rounded-full flex items-center justify-center text-xs font-medium text-white transition-all duration-500" [ngStyle]="{'width': (luxValue/1200 * 100) + '%', 'background-color': '#f59e0b'}">
+                                <span class="sr-only">{{ (luxValue/1200 * 100) | number:'1.0-0' }}%</span>
+                            </div>
+                        </div>
+                        <p class="text-right text-xs mt-1 text-gray-500 dark:text-gray-400">{{ (luxValue/1200 * 100) | number:'1.0-0' }}% of Max</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-12 p-mt-5">
+        <h2 class="text-xl font-bold mb-4">📊 Production & Performance</h2>
+        <p-divider type="dotted"></p-divider>
+
+        <div class="grid grid-cols-12 gap-6 w-full">
+            <div class="col-span-12 lg:col-span-8">
+                <div class="app-dashboard-card border-t-4 border-blue-500 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+                    <h3 class="text-lg font-semibold mb-3 border-b pb-2">AC Power Daily Curve</h3>
+                    <p-chart type="line" [data]="dailyProductionChartData" [options]="chartOptions"></p-chart>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4">
+                <div class="app-dashboard-card border-t-4 border-blue-500 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+                    <h3 class="text-lg font-semibold mb-3 border-b pb-2">Inverter & KPI's</h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-1">
+                            <div class="text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden">
+                                <div class="app-sensor-header bg-gray-100 dark:bg-gray-700 py-1">
+                                    <span class="text-xs uppercase font-semibold leading-none text-gray-600 dark:text-gray-300">STATUS</span>
+                                </div>
+                                <div class="app-sensor-value text-white py-2" [ngClass]="getInverterStatusColor()">
+                                    <span class="text-base font-extrabold leading-none">{{ inverterStatus | uppercase }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-1">
+                            <div class="text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden">
+                                <div class="app-sensor-header bg-gray-100 dark:bg-gray-700 py-1">
+                                    <span class="text-xs uppercase font-semibold leading-none text-gray-600 dark:text-gray-300">P. RATIO</span>
+                                </div>
+                                <div class="app-sensor-value text-white py-2" [ngClass]="getMetricColor(0.78 * 100, 80, 'low')">
+                                    <span class="text-base font-extrabold leading-none">{{ (0.78 * 100) | number:'1.0-0' }}%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2">
+                            <div class="text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden">
+                                <div class="app-sensor-header bg-gray-100 dark:bg-gray-700 py-1">
+                                    <span class="text-xs uppercase font-semibold leading-none text-gray-600 dark:text-gray-300">TOTAL ENERGY (LIFETIME)</span>
+                                </div>
+                                <div class="app-sensor-value text-white py-2 bg-blue-500">
+                                    <span class="text-base font-extrabold leading-none">15,450 kWh</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t flex justify-between items-center text-sm">
+                        <span class="text-primary font-medium text-blue-500">Control Panel</span>
+                        <p-button label="Check Logs" icon="pi pi-chevron-right" [link]="true" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12">
+                <h3 class="text-xl font-bold mb-4 mt-6">🔆 Individual Panel Health</h3>
+                <p-divider type="dotted"></p-divider>
+
+                <div class="grid grid-cols-12 gap-6 w-full">
+                    @for (panel of panelData; track panel.id) {
+
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                        <div
+                            class="app-dashboard-card border-t-4"
+                            [ngClass]="panel.status === 'OK' ? 'border-green-500' : 'border-yellow-500'"
+                            class="app-dashboard-card p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                        >
+                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                <div class="flex items-center text-gray-700 dark:text-gray-300 font-medium">
+                                    <i class="pi pi-box mr-2"></i>
+                                    <span class="text-blue-600 dark:text-blue-400 font-extrabold text-xl">PANEL {{ panel.id }}</span>
+                                </div>
+                                <i class="pi pi-cog text-gray-500 dark:text-gray-400"></i>
+                            </div>
+
+                            <div class="text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
+                                <div class="app-sensor-header bg-gray-100 dark:bg-gray-700 py-1">
+                                    <span class="text-xs uppercase font-semibold leading-none text-gray-600 dark:text-gray-300">OUTPUT POWER</span>
+                                </div>
+                                <div class="app-sensor-value text-white py-2" [ngClass]="getMetricColor(panel.power, 250, 'low')">
+                                    <span class="text-2xl font-extrabold leading-none">{{ panel.power }} W</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-2 border-t flex justify-between items-center text-sm">
+                                <span class="text-primary font-medium text-blue-500">Health Status:</span>
+                                <span class="text-gray-500 dark:text-gray-400 font-semibold">{{ panel.status }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <p class="col-span-12 text-center text-gray-500">No panel data available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

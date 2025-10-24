@@ -1,0 +1,86 @@
+<div class="col-span-12">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+        <i class="pi pi-chart-bar mr-3"></i>
+        {{configTarget}} System Dashboard
+    </h2>
+
+    <div class="grid grid-cols-12 gap-2 w-full">
+        @for (card of dashboardCards; track card.title) {
+
+        <div class="col-span-12 lg:col-span-4 xl:col-span-4">
+            <p-card [header]="card.title" [class]="'shadow-md hover:shadow-xl transition-shadow duration-300 h-full border-t-4 border-blue-500'">
+                <div class="flex flex-col items-start p-2 h-full">
+                    @if (card.type === 'pump') {
+                    <div class="flex flex-col w-full space-y-3">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">MITSUBISHI 5Hp AC/220v</p>
+                        <div class="flex items-center justify-between w-full pb-2 border-b">
+                            <i [class]="card.icon" class="text-3xl text-blue-500"></i>
+
+                            <p-toggleswitch [(ngModel)]="pumpOn" />
+                        </div>
+
+                        <div class="flex justify-between items-center w-full">
+                            <span class="text-md font-medium text-gray-700 dark:text-gray-300">Flow Rate:</span>
+                            <span class="text-md font-extrabold text-blue-500 dark:text-gray-100">{{ card.flowRate | number }} LPM</span>
+                        </div>
+
+                        <div class="flex justify-between items-center w-full">
+                            <span class="text-md font-medium text-gray-700 dark:text-gray-300">RPM: </span>
+                            <span class="text-md font-extrabold text-blue-500 dark:text-gray-100">800</span>
+                        </div>
+
+                        <div class="flex justify-between items-center w-full">
+                            <span class="text-md font-medium text-gray-700 dark:text-gray-300">Power:</span>
+                            <span class="text-lg font-bold text-blue-500 dark:text-orange-400">{{ card.powerConsumption || 'N/A' }} / {{ card.powerHz || 'N/A' }} Hz</span>
+                        </div>
+
+                        <div class="flex justify-between items-center w-full pt-2 border-t border-dashed border-gray-200 dark:border-gray-700">
+                            <span class="text-md font-medium text-gray-700 dark:text-gray-300">Time to Fill:</span>
+                            <span class="text-lg font-bold text-green-600 dark:text-green-400">{{ card.timeToFill }}</span>
+                        </div>
+                        <div class="flex justify-between items-center w-full pt-2 border-t border-dashed border-gray-200 dark:border-gray-700">
+                            <span class="text-md font-medium text-gray-700 dark:text-gray-300">Tank Cap :</span>
+                            <span class="text-md font-extrabold text-blue-500 dark:text-gray-100">{{TANK_CAPACITY_M | number}} m³</span>
+                        </div>
+                    </div>
+                    } @else if (card.type === 'level') {
+                    <div class="flex flex-col w-full space-y-4">
+                        <div class="flex items-center justify-between w-full">
+                            <i [class]="card.icon" class="text-4xl text-blue-500"></i>
+                            <span class="text-2xl font-extrabold text-gray-900 dark:text-gray-100">{{ card.displayValue }}</span>
+                        </div>
+
+                        <p-progressBar [value]="card.value" [showValue]="false" styleClass="h-4 border border-blue-200 dark:border-blue-700"> </p-progressBar>
+
+                        <div class="flex justify-between text-sm text-gray-700 dark:text-gray-300 pt-2 border-t border-dashed border-gray-200 dark:border-gray-700">
+                            <div>
+                                <span class="font-medium">To Fill:</span>
+                                <span class="font-bold text-green-600 dark:text-green-400 block">{{ dashboardCards[0].timeToFill }}</span>
+                            </div>
+                            <div>
+                                <span class="font-medium">To Drain:</span>
+                                <span class="font-bold text-red-600 dark:text-red-400 block">{{ card.timeToDrain }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    } @else if (card.type === 'multiple') {
+                    <div class="flex flex-col w-full space-y-2">
+                        <div class="flex justify-between items-center w-full pb-3 border-b border-blue-200 dark:border-blue-700">
+                            <span class="text-lg font-bold text-gray-700 dark:text-gray-300">Total Outflow:</span>
+                            <span class="text-lg font-extrabold text-red-500 dark:text-red-400">{{ card.totalRate }}</span>
+                        </div>
+
+                        @for (pipe of card.pipes; track pipe.name) {
+                        <div class="flex justify-between items-center w-full border-b border-gray-100 dark:border-gray-700 last:border-b-0 pb-1">
+                            <span class="text-md text-gray-700 dark:text-gray-300">{{ pipe.name }}:</span>
+                            <p-badge [value]="pipe.flow" [severity]="pipe.severity"></p-badge>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </p-card>
+        </div>
+        }
+    </div>
+</div>

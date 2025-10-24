@@ -1,0 +1,13 @@
+currentStock :tilapia ,vanamei,baramundi
+date_epoch :number
+do :number
+nh4 :number
+ph :number
+releaseDate :number (epoch)
+salinity :number
+stockDate :number (epoch)
+tankId :string
+temp_c :number
+timestamp :number (epoch)
+turbidity :number
+waterlevel :number

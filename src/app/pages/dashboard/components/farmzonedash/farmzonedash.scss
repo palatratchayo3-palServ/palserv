@@ -1,0 +1,50 @@
+/* --- SCSS Abstraction for Clean HTML (Removed excessive @apply) --- */
+
+/* 1. Main Dashboard Card - Keep complex properties but remove Tailwind utils */
+.app-dashboard-card {
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 1.25rem; /* p-5 */
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-xl */
+    transition: all 0.3s ease; /* transition duration-300 */
+
+    // NOTE: Keep bg-white and dark:bg-gray-800 in the HTML or use variables if possible
+}
+
+/* 2. Loading State Container */
+.app-loading-container {
+    padding: 2rem; /* p-8 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    // NOTE: Keep bg-white and dark:bg-gray-800 in the HTML
+}
+
+/* 3. Sensor Card Header */
+.app-sensor-header {
+    padding: 0.25rem; /* p-1 */
+    border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
+    // NOTE: Keep flex, text-gray-700, dark:bg-gray-900, etc. in the HTML
+}
+
+/* 4. Sensor Card Value */
+.app-sensor-value {
+    padding: 0.5rem; /* p-2 */
+    // NOTE: Keep text-white, flex, hover:brightness-110, etc. in the HTML
+}
+
+/* 5. Water Level Progress Bar Container */
+.app-water-level-bar {
+    padding: 1rem; /* p-4 */
+    border-radius: 0.5rem; /* rounded-lg */
+    margin-top: 1rem; /* mt-4 */
+    // NOTE: Keep bg-gray-100 dark:bg-gray-700 in the HTML
+}
+
+/* --- PrimeNG Progress Bar overrides (Keep this) --- */
+p-progressbar {
+    --p-progressbar-label-color: black;
+    --p-progressbar-height: 10px;
+}
