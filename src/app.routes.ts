@@ -8,6 +8,8 @@ import { TankConfig } from './app//pages/tankdetails/tankConfig/tank-config/tank
 import { Tankcontrol } from './app/pages/tankdetails/tankcontrol/tankcontrol';
 import { SolarDashboard } from './app/pages/dashboard/components/solarsystem//solardashboard/solardashboard';
 import { ForecastComponent } from '@/pages/forecast_reports/forecast/forecast';
+import { F1dashboard } from '@/formula1/f1dashboard/f1dashboard';
+import { Weather } from '@/weather/weather';
 
 export const appRoutes: Routes = [
     {
@@ -20,7 +22,9 @@ export const appRoutes: Routes = [
             { path: 'tankconfig/:zoneid/:tankid', component: TankConfig },
             { path: 'tankcontrol', component: Tankcontrol },
             { path: 'solardashboard', component: SolarDashboard },
-            { path: 'forecast', component: ForecastComponent }
+            { path: 'forecast', component: ForecastComponent },
+            { path: 'f1dashboard', component: F1dashboard },
+            { path: 'weather', component: Weather }
         ]
     },
     { path: 'notfound', component: Notfound },

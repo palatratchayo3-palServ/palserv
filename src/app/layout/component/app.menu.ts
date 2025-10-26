@@ -32,31 +32,10 @@ export class AppMenu {
                 items: [{ label: 'Forecast', icon: 'pi pi-file', routerLink: ['/forecast'] }]
             },
             {
-                label: 'Pages',
-                icon: 'pi pi-fw pi-briefcase',
-                routerLink: ['/pages'],
+                label: 'F1 Dashboard',
                 items: [
-                    {
-                        label: 'Profile',
-                        icon: 'pi pi-fw pi-user',
-                        items: [
-                            {
-                                label: 'Login',
-                                icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
-                            },
-                            {
-                                label: 'Error',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
-                            },
-                            {
-                                label: 'Access Denied',
-                                icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
-                            }
-                        ]
-                    }
+                    { label: 'Races Dashboard', icon: 'pi pi-crown', routerLink: ['/f1dashboard'] },
+                    { label: 'Data', icon: 'pi pi-chart-line', routerLink: ['/'] }
                 ]
             },
             {

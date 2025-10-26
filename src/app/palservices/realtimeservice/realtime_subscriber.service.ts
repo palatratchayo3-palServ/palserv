@@ -67,7 +67,7 @@ export class DataCacheService implements OnDestroy {
                 next: (data: DataCache) => {
                     // This block executes when new data arrives from Firestore
                     this.writeToLocalStorage(data);
-                    console.log('✅ Local Data Cache updated successfully.');
+                    // console.log('✅ Local Data Cache updated successfully.');
                 },
                 error: (err) => {
                     console.error('Error subscribing to collections:', err);
